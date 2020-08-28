@@ -1,0 +1,86 @@
+Description: >
+    Reem Mohamed Amr /Infrastructure - Devops Nanodegree
+
+Parameters:
+    EnvironmentName:
+        Description: An environment name
+        Type: String
+
+    VpcCIDR:
+      Description:  please enter the IP
+      Type: String
+      Default: 10.0.0.0/16
+      
+    PublicSubnet1CIDR:
+        Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
+        Type: String
+        Default: 10.0.0.0/24
+
+Resources:
+    VPC: 
+            Type: AWS::EC2::VPC
+            Properties: 
+                CidrBlock: !Ref VpcCIDR
+                EnableDnsHostnames: true
+                Tags:
+                    - Key: name
+                      Value: !Ref EnvironmentName
+    InternetGateway:
+            Type: AWS::EC2::InternetGateway
+            Properties: 
+                Tags:
+                    - Key: name
+                      Value: !Ref EnvironmentName
+    InternetGatewayAttachment:
+            Type: AWS::EC2::VPCGatewayAttachment
+            Properties: 
+                VpcId: !Ref VPC
+                InternetGatewayId: !Ref InternetGateway
+    PublicSubnet1:
+            Type: AWS::EC2::Subnet
+            Properties: 
+                VpcId: !Ref VPC
+                AvailabilityZone: !Select [0, !GetAZs '' ]
+                CidrBlock: !Ref PublicSubnet1CIDR
+                MapPublicIpOnLaunch: true
+                Tags:
+                    - Key: name
+                      Value: !Sub $(EnvironmentName) Public Subnet (AZ1)
+    EC21EIP:
+            Type: AWS::EC2::EIP
+            DependsOn: InternetGatewayAttachment
+            Properties: 
+                Domain: vpc
+    PublicRouteTable:
+            Type: AWS::EC2::RouteTable
+            Properties: 
+                Tags:
+                    - Key: name
+                      Value: !Sub $(EnvironmentName) Public Routes
+                VpcId: !Ref VPC
+    DefaultPublicRoute:
+            Type: AWS::EC2::Route
+            DependsOn: InternetGatewayAttachment
+            Properties: 
+                RouteTableId: !Ref PublicRouteTable
+                DestinationCidrBlock: 0.0.0.0/0
+                GatewayId: !Ref InternetGateway
+    PublicSubnet1RouteTableAssociation:
+            Type: AWS::EC2::SubnetRouteTableAssociation
+            Properties: 
+                RouteTableId: !Ref PublicRouteTable
+                SubnetId: !Ref PublicSubnet1
+Outputs: 
+
+
+    VPC: 
+        Description: A reference to the created VPC
+        Value: !Ref VPC
+        Export:
+          Name: !Sub ${EnvironmentName}-VPCID
+
+    PublicSubnet1:
+        Description: A reference to the public subnet in the 1st Availability Zone
+        Value: !Ref PublicSubnet1
+        Export:
+          Name: !Sub ${EnvironmentName}-PUB1-SN
