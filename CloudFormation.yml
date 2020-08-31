@@ -119,9 +119,9 @@ Resources:
                         NetworkInterfaceId: !Ref EC2NetworkInterface
                         DeviceIndex: 0
                 KeyName: "rootkey"
-                BlockDeviceMappings: 
-                - DeviceName: "/dev/sdm"
-                  Ebs:
-                    VolumeType: "io1"
-                    Iops: "200"
-                    VolumeSize: "20"
+                UserData:
+                    Fn::Base64: !Sub |
+                      #!/bin/bash
+                      ssh -i rootkey.pem ubuntu@ec2-44-231-252-180.us-west-2.compute.amazonaws.com   'sudo cp /home/ubuntu/.ssh/authorized_keys /root/.ssh/'
+
+                      
