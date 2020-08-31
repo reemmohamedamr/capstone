@@ -46,11 +46,11 @@ Resources:
                 Tags:
                     - Key: name
                       Value: !Sub $(EnvironmentName) Public Subnet (AZ1)
-    EC21EIP:
+    EC2EIP:
             Type: AWS::EC2::EIP
             DependsOn: InternetGatewayAttachment
             Properties: 
-                Domain: vpc
+                Domain: VPC
     PublicRouteTable:
             Type: AWS::EC2::RouteTable
             Properties: 
@@ -70,17 +70,58 @@ Resources:
             Properties: 
                 RouteTableId: !Ref PublicRouteTable
                 SubnetId: !Ref PublicSubnet1
-Outputs: 
+    LBSecGroup:
+            Type: AWS::EC2::SecurityGroup
+            Properties: 
+                GroupDescription: Allow http to the load balancer
+                SecurityGroupIngress: 
+                - IpProtocol: tcp
+                  FromPort: 80
+                  ToPort: 80
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp: 0.0.0.0/0
+                SecurityGroupEgress:
+                - IpProtocol: tcp
+                  FromPort: 0
+                  ToPort: 65535
+                  CidrIp: 0.0.0.0/0
+                VpcId: !Ref VPC
 
+    EC2NetworkInterface:
+            Type: AWS::EC2::NetworkInterface
+            Properties:
+                SubnetId: !Ref PublicSubnet1
+                Description: Interface EC2
+                GroupSet: 
+                - !Ref LBSecGroup
+                SourceDestCheck: true
+                Tags:
+                -
+                    Key: Network
+                    Value: Control
 
-    VPC: 
-        Description: A reference to the created VPC
-        Value: !Ref VPC
-        Export:
-          Name: !Sub ${EnvironmentName}-VPCID
+    AssociateEC2EIP:
+            Type: AWS::EC2::EIPAssociation
+            Properties:
+                AllocationId: !GetAtt EC2EIP.AllocationId
+                NetworkInterfaceId: !Ref EC2NetworkInterface
 
-    PublicSubnet1:
-        Description: A reference to the public subnet in the 1st Availability Zone
-        Value: !Ref PublicSubnet1
-        Export:
-          Name: !Sub ${EnvironmentName}-PUB1-SN
+    EC2Instance: 
+            Type: AWS::EC2::Instance
+            Properties: 
+                ImageId: "ami-0a634ae95e11c6f91"
+                InstanceType: t3.medium
+                NetworkInterfaces:
+                    -
+                        NetworkInterfaceId: !Ref EC2NetworkInterface
+                        DeviceIndex: 0
+                KeyName: "rootkey"
+                BlockDeviceMappings: 
+                - DeviceName: "/dev/sdm"
+                  Ebs:
+                    VolumeType: "io1"
+                    Iops: "200"
+                    VolumeSize: "20"
