@@ -80,6 +80,10 @@ Resources:
                   ToPort: 80
                   CidrIp: 0.0.0.0/0
                 - IpProtocol: tcp
+                  FromPort: 8080
+                  ToPort: 8080
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
                   FromPort: 22
                   ToPort: 22
                   CidrIp: 0.0.0.0/0
@@ -112,6 +116,8 @@ Resources:
     EC2Instance: 
             Type: AWS::EC2::Instance
             Properties: 
+                Tags : 
+                    [{"Key" : "Name", "Value" : "capstone"}]
                 ImageId: "ami-0a634ae95e11c6f91"
                 InstanceType: t3.medium
                 NetworkInterfaces:
