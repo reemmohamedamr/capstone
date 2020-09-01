@@ -13,7 +13,7 @@ pipeline {
     }
     stage('Upload to AWS') {
       steps {
-        withAWS(region:'us-west-2',credentials:'blueocean') {
+        withAWS(region:'us-west-2',credentials:'admin') {
           s3Upload(pathStyleAccessEnabled:true, payloadSigningEnabled: true, file:'index.html', bucket:'c3pipelines')
         }
       }
