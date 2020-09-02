@@ -22,5 +22,12 @@ pipeline {
                 sh './run_docker.sh'
             }
         }
+    stage('Push Docker Image into Docker Hub'){
+            steps{
+                sh("docker login --username $0 -p $1")
+                sh("docker tag capstone reemamr/capstone")
+                sh "docker push reemamr/capstone"
+            }
+        }
   }
 }
