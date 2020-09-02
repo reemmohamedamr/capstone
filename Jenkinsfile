@@ -1,7 +1,9 @@
 pipeline {
   environment { 
-	        credential = 'DockerhubCredentials' 
-	}
+        registry = "reemamr/capstone" 
+        registryCredential = 'DockerhubCredentials' 
+        dockerImage = '' 
+    }
   agent any
   stages {
     stage('Greetings') {
@@ -19,17 +21,30 @@ pipeline {
                 sh 'hadolint --ignore DL3006 Dockerfile'
             }
         }
-    stage('Build Image') {
-            steps {
-                sh "chmod +x run_docker.sh"
-                sh './run_docker.sh'
+        stage('Cloning our Git') { 
+            steps { 
+                git 'https://github.com/reemamr/capstone.git' 
             }
+        } 
+        stage('Building our image') { 
+            steps { 
+                script { 
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                }
+            } 
         }
-    stage('Push Docker Image into Docker Hub'){
-            steps{
-                sh("docker login -u reemamr -p $credential")
-                sh("docker tag capstoneapi reemamr/capstone")
-                sh("docker push reemamr/capstone")
+        stage('Deploy our image') { 
+            steps { 
+                script { 
+                    docker.withRegistry( '', registryCredential ) { 
+                        dockerImage.push() 
+                    }
+                } 
+            }
+        } 
+        stage('Cleaning up') { 
+            steps { 
+                sh "docker rmi $registry:$BUILD_NUMBER" 
             }
         }
   }
