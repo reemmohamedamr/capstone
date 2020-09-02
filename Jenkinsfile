@@ -11,5 +11,10 @@ pipeline {
         sh 'tidy -q -e *.html'
       }
     }
+    stage('Lint Dockerfile') {
+            steps {
+                sh 'hadolint --ignore DL3006 Dockerfile'
+            }
+        }
   }
 }

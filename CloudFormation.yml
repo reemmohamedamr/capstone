@@ -142,4 +142,15 @@ Resources:
                       sudo apt-get install -y python3-venv
                       python3 -m venv ~/.devops          
                       source ~/.devops/bin/activate
-                      
+                      pip install --upgrade pip
+                      sudo apt install docker.io
+                      touch requirements.txt
+                      vim requirements.txt
+                      sudo cat requirements.txt
+                      touch Dockerfile
+                      vim Dockerfile
+                      sudo cat Dockerfile
+                      touch run_docker.sh
+                      vim run_docker.sh
+                      sudo cat run_docker.sh
+                      chmod +x run_docker.sh
