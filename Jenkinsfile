@@ -1,6 +1,6 @@
 pipeline {
   environment { 
-        registry = "reemamr/capstone" 
+        registry = "reemmohamedamr/capstone" 
         registryCredential = 'DockerhubCredentials' 
         dockerImage = '' 
     }
@@ -45,6 +45,19 @@ pipeline {
         stage('Cleaning up') { 
             steps { 
                 sh "docker rmi $registry:$BUILD_NUMBER" 
+            }
+        }
+    stage('Build Image') {
+            steps {
+                sh "chmod +x run_docker.sh"
+                sh './run_docker.sh'
+            }
+        }
+    stage('Push Docker Image into Docker Hub'){
+            steps{
+                sh("docker login -u reemamr -p $credential")
+                sh("docker tag capstoneapi reemamr/capstone")
+                sh("docker push reemamr/capstone")
             }
         }
   }
