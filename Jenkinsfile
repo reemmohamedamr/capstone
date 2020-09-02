@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Greetings') {
       steps {
-        sh 'echo "Hello,Let''s start our pipe"'
+        sh 'echo "Hello,Let us start our pipe"'
       }
     }
     stage('Lint HTML') {
