@@ -1,4 +1,7 @@
 pipeline {
+  environment { 
+	        credential = 'DockerhubCredentials' 
+	}
   agent any
   stages {
     stage('Greetings') {
@@ -24,7 +27,7 @@ pipeline {
         }
     stage('Push Docker Image into Docker Hub'){
             steps{
-                sh("docker login -u reemamr -p DOCKER_PASSWORD")
+                sh("docker login -u reemamr -p $credential")
                 sh("docker tag capstoneapi reemamr/capstone")
                 sh("docker push reemamr/capstone")
             }
