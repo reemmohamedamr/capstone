@@ -138,6 +138,7 @@ Resources:
                       sudo systemctl enable jenkins 
                       sudo systemctl status jenkins
                       sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+                      sudo apt install -y tidy
 
                
                       
