@@ -125,5 +125,19 @@ Resources:
                         NetworkInterfaceId: !Ref EC2NetworkInterface
                         DeviceIndex: 0
                 KeyName: "capstone"
+                UserData: 
+                    Fn::Base64: !Sub |
+                      sudo apt update 
+                      sudo apt install -y default-jdk 
+                      sudo apt install -y jenkins
+                      wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add - 
+                      sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list' 
+                      sudo apt-get update 
+                      sudo apt-get install -y jenkins 
+                      sudo systemctl start jenkins 
+                      sudo systemctl enable jenkins 
+                      sudo systemctl status jenkins
+                      sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
                
                       
