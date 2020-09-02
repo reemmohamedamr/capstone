@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Cloning our Git') { 
             steps { 
-                git 'https://github.com/reemamr/capstone.git' 
+                git 'https://github.com/reemmohamedamr/capstone.git' 
             }
         } 
         stage('Building our image') { 
