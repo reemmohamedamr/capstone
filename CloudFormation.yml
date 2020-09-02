@@ -145,6 +145,7 @@ Resources:
                       pip install --upgrade pip
                       sudo apt install docker.io
                       sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+                      sudo chmod +x /bin/hadolint
                       touch requirements.txt
                       vim requirements.txt
                       sudo cat requirements.txt
@@ -163,6 +164,5 @@ Resources:
                       curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
                       chmod +x ./kubectl
                       sudo snap install kubectl --classic
-                      sudo chmod +x /bin/hadolint
 
 
