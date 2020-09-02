@@ -24,9 +24,9 @@ pipeline {
         }
     stage('Push Docker Image into Docker Hub'){
             steps{
-                sh("docker login --username reemamr -p ${0}")
-                sh("docker tag capstone reemamr/capstone")
-                sh "docker push reemamr/capstone"
+                sh("docker login -u reemamr")
+                sh("docker tag capstoneapi reemamr/capstone")
+                sh("docker push reemamr/capstone")
             }
         }
   }
