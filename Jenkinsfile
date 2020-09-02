@@ -16,5 +16,11 @@ pipeline {
                 sh 'hadolint --ignore DL3006 Dockerfile'
             }
         }
+    stage('Build Image') {
+            steps {
+                sh "chmod +x run_docker.sh"
+                sh './run_docker.sh'
+            }
+        }
   }
 }
