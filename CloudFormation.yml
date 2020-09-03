@@ -175,7 +175,7 @@ Resources:
                       kubectl describe pods
                       export POD_Name=$(kubectl get pods -o go-template --template '{{range.items}}{{.metadata.name}}{{"\n"}}{{end}}')
                       echo name of the pod:$POD_Name
-                      curl http://localhost:8080/api/vi/namespaces/default/pods/$POD_Name/proxy/
+                      curl http://localhost:8080/api/vi/namespaces/default/pods/kubernetes-deployment2-996f9844d-cxr9c/proxy/
                       
 
 
