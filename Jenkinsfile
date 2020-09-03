@@ -21,6 +21,7 @@ pipeline {
                 sh 'hadolint --ignore DL3006 Dockerfile'
             }
         }
+    }
     stage('Cloning our Git') { 
         steps { 
             git 'https://github.com/reemmohamedamr/capstone.git' 
