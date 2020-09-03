@@ -47,5 +47,11 @@ pipeline {
             sh "docker rmi $registry:$BUILD_NUMBER" 
         }
     }
-  }
+    stage('Kubernetes')  {
+            steps {
+                sshagent(credentials : ['k8s']) {
+                    sh 'ssh -t -t ubuntu@10.0.0.81 -o StrictHostKeyChecking=no "minikube start; kubectl delete --all pods; kubectl run capstone --image=reemamr/capstone --port=80; sleep 5s; kubectl get pods; kubectl port-forward --address 0.0.0.0 capstone 8888:80"'
+                }
+            }
+    }
 }

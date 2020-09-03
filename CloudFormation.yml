@@ -167,6 +167,15 @@ Resources:
                       sudo mv ./kubectl /user/local/bin/kubectl
                       kubectl version --client
                       minikube start
+                      kubectl config view
+                      kubectl get nodes
+                      kubectl get pods
+                      kubectl create deployment kubernetes-api --image=reemamr/capstone
+                      kubectl get deployments
+                      kubectl describe pods
+                      export POD_Name=$(kubectl get pods -o go-template --template '{{range.items}}{{.metadata.name}}{{"\n"}}{{end}}')
+                      echo name of the pod:$POD_Name
+                      curl http://localhost:8080/api/vi/namespaces/default/pods/$POD_Name/proxy/
                       
 
 
